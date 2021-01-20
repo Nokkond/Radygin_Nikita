@@ -22,6 +22,8 @@ set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
 set(Nick
     KeyBlinder/mainwindow.cpp
     KeyBlinder/main.cpp
+    KeyBlinder/secondwindow.cpp	
+    KeyBlinder/infow.cpp	
     ${QRCS}
 )
 
