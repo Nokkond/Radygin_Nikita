@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ui_mainwindow.h"
-#include "mainwindow.h"
+
+
 #include "ui_mainwindow.h"
 #include <QApplication>
 #include <QTextEdit>
@@ -13,13 +13,29 @@
 #include <QTimer>
 #include <QWidget>
 #include <QKeyEvent>
-#include <Qstring>
+#include <QString>
 #include <QTime>
 #include <QTimer>
 #include <QList>
 #include <cstdlib>
 #include <stdlib.h>
 #include <QLabel>
+#include <QFile>
+#include <QByteArray>
+#include <QTextStream>
+#include <QFile>
+#include <QTextStream>
+#include <QString>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QDebug>
+#include <QFileDialog>
+#include <QLocale>
+#include <QPushButton>
+#include <QIcon>
+#include <QFileDialog>
+#include <QStringList>
+
 
 using namespace std;
 
@@ -35,67 +51,199 @@ public:
     explicit MainWindow(QWidget *parent = 0);
      ~MainWindow();
 
-    void init();
-    void go();
-    void update_ceils();
-    void make();
-    void gen();
-    void ChangeScore(int x);
-    const char* get(int x);
-    bool f;
-    void change(int x);
-    void keyPressEvent(QKeyEvent *event);
-    QString keyv;
-    QChar k;
-    QChar k1;
-    QString keyv1;
-    QString keyv2;
-    QString startstring;
-    QString startstring1;
-    QString style1;
-    QString style2;
-    QString style3;
-    void testovoy();
-    QList<QString> level1;
-    QList<QString> level2;
-    QList<QString> level3;
-    QList<QString> level4;
-    QList<QString> level5;
+    ///
+    /// \brief process_line
+    /// \param line
+    ///
 
+
+
+    void change(int x);
+    ///
+    /// \brief keyPressEvent функция определения события нажатия клавиши клавиатуры
+    /// \param event нажатая клавиша
+    ///
+    void keyPressEvent(QKeyEvent *event);
+    ///
+    /// \brief keyv переменная для работы со строкой
+    ///
+    QString keyv;
+    ///
+    /// \brief k переменная для работы со строкой
+    ///
+    QString k;
+    ///
+    /// \brief k1 переменная для работы со строкой
+    ///
+    QString k1;
+    ///
+    /// \brief keyv1 переменная для работы со строкой
+    ///
+    QString keyv1;
+    ///
+    /// \brief keyv2 переменная для работы со строкой
+    ///
+    QString keyv2;
+    ///
+    /// \brief startstring
+    /// Переменная строки
+    ///
+    QString startstring;
+    ///
+    /// \brief startstring1 функция полной строки
+    ///
+    QString startstring1;
+    ///
+    /// \brief style1 переменная базового стиля клавиш
+    ///
+    QString style1;
+    ///
+    /// \brief style2 стиль подстветки неправильных клавиш
+    ///
+    QString style2;
+    ///
+    /// \brief style3 стиль подсветки правильных клавиш
+    ///
+    QString style3;
+    ///
+    /// \brief style4 переменная базового стиля более темных клавиш
+    ///
+    QString style4;
+    ///
+    /// \brief cutter переменная, помогающая сравнивать символы
+    ///
+    QString cutter;
+    ///
+    /// \brief cutter2 переменная, помогающая сравнивать символы
+    ///
+    QString cutter2;
+    ///
+    /// \brief cutter3 переменная, помогающая сравнивать символы
+    ///
+    QString cutter3;
+
+
+    ///
+    /// \brief levelrus словарь для русского режима
+    ///
+    QList<QStringList>levelrus;
+    ///
+    /// \brief leveleng словарь для английского режима
+    ///
+    QList<QStringList>leveleng;
+    ///
+    /// \brief levellang переменная языкового режима
+    ///
+    QList<QStringList>levellang;
+    ///
+    /// \brief langkeys словарь выбранного языка клавиш
+    ///
+    QList<QString> langkeys;
+    ///
+    /// \brief engkeys словарь английских клавиш
+    ///
+    QList<QString> engkeys;
+    ///
+    /// \brief ruskeys словарь русских клавиш
+    ///
+    QList<QString> ruskeys;
+
+
+    ///
+    /// \brief level переменная уровня
+    ///
     int level;
-    int rn;
+    ///
+    /// \brief count счетчик
+    ///
     int count;
+    ///
+    /// \brief count1 счетчик
+    ///
     int count1;
+    ///
+    /// \brief mistakes переменная количества ошибок
+    ///
     int mistakes;
-    int tru;
+    ///
+    /// \brief accuracy переменная точности правописания
+    ///
     float accuracy;
-    QLabel  name;
+
+
+    ///
+    /// \brief mistake дополнительный счетчик для ошибкок
+    ///
     int mistake;
-    int mark;
+    ///
+    /// \brief x1  переменная для хранения времени
+    ///
     int x1;
+    ///
+    /// \brief x2 переменная для обработки актуального времени
+    ///
     int x2;
+    ///
+    /// \brief language переменная выбранного языка
+    ///
+    QString language;
+    ///
+    /// \brief ttt переменная времени
+    ///
     QTime ttt = QTime::currentTime();
+    ///
+    /// \brief file_name имя используемого файло
+    ///
+    QString file_name;
+
 
 private slots:
-    void on_label_42_linkActivated(const QString &link);
 
-    void on_label_42_linkHovered(const QString &link);
 
-    void on_label_42_windowIconTextChanged(const QString &iconText);
 
-    void on_label_42_objectNameChanged(const QString &objectName);
-
-    void on_pushButton_clicked();
-
+    ///
+    /// \brief on_l1_clicked функия проверки нажатия кнопки первого уровня сложности
+    ///
     void on_l1_clicked();
-
+    ///
+    /// \brief on_l2_clicked функия проверки нажатия кнопки вторго уровня сложности
+    ///
     void on_l2_clicked();
-
+    ///
+    /// \brief on_l3_clicked функия проверки нажатия кнопки третьего уровня сложности
+    ///
     void on_l3_clicked();
-
+    ///
+    /// \brief on_l4_clicked функия проверки нажатия кнопки четвертого уровня сложности
+    ///
     void on_l4_clicked();
 
-    void on_l1_5_clicked();
+
+    ///
+    /// \brief on_l5_clicked функция выбора файла словаря для пятого уровня сложности
+    ///
+    void on_l5_clicked();
+
+
+
+
+    ///
+    /// \brief on_eng_clicked функция выбора английского языка
+    ///
+    void on_eng_clicked();
+
+    ///
+    /// \brief on_rus_clicked функция выбора русского языка
+    ///
+    void on_rus_clicked();
+    ///
+    /// \brief on_editor_clicked функция открытия редактора
+    ///
+    void on_editor_clicked();
+    ///
+    /// \brief on_info_clicked функция открытия окна информации
+    ///
+    void on_info_clicked();
 
 private:
     Ui::MainWindow *ui;

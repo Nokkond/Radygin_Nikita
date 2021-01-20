@@ -25,15 +25,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+        infow.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        secondwindow.cpp
 
 HEADERS += \
-        mainwindow.h
+    infow.h \
+    mainwindow.h \
+    secondwindow.h
 
 FORMS += \
-        mainwindow.ui
+    infow.ui \
+    mainwindow.ui \
+    secondwindow.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=
+
+RESOURCES += \
+    myres.qrc

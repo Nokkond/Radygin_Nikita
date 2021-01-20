@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "infow.h"
+#include "secondwindow.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QApplication>
@@ -17,13 +17,81 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <QLabel>
+#include <QFile>
+#include <QByteArray>
+#include <QTextStream>
+#include <QFile>
+#include <QTextStream>
+#include <QString>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QDebug>
+#include <QFileDialog>
+#include <QLocale>
+#include <QPushButton>
+#include <QIcon>
+#include <QFileDialog>
+#include <QStringList>
+#include <QRandomGenerator>
+
+
+
 
 using namespace std;
 
+
+
+
+
+
+
 int rnd(int x){
-    mt19937 get(chrono::high_resolution_clock::now().time_since_epoch().count());
-    return get() % x;
+
+    int h = QRandomGenerator::global()->bounded(x);
+    return h;
 }
+
+
+
+QString stroka(int level, QString startstring, QList<QStringList> levellang ){
+
+    if (level==1){
+        for(int i = 0; i<11; i++ ){
+
+            startstring+=levellang[0][rnd(levellang[0].size())]+' ';
+        }
+    }
+    else if(level==2){
+        for(int i = 0; i<10; i++ ){
+
+            startstring+=levellang[1][rnd(levellang[1].size())]+' ';
+        }
+    }
+    else if(level==3){
+        for(int i = 0; i<10; i++ ){
+
+            startstring+=levellang[2][rnd(levellang[2].size())]+' ';
+        }
+    }
+    else if(level==4){
+        for(int i = 0; i<9; i++ ){
+
+            startstring+=levellang[3][rnd(levellang[3].size())]+' ';
+        }
+    }
+    else if(level==5){
+        for(int i = 0; i<8; i++ ){
+
+            startstring+=levellang[4][rnd(levellang[4].size())]+' ';
+        }
+    }
+    return startstring;
+}
+
+
+
+
+
 
 long double tme(){
     long double x = 1.0 * clock() / CLOCKS_PER_SEC;
@@ -32,50 +100,54 @@ long double tme(){
 
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
+
+
     ui->setupUi(this);
     ttt.start();
-    this->setFixedSize(740,470);
-    level = 1;
-    level1 = { "burg", "bur", "bunny","burn","fug","grub","grunt","gun","gym", "hum", "jugum", "hurt", "mummy", "mugg", "thug"};
-    level2 = { "begem", "bein", "big","cetrimide","chicken","chief","deer","deemed","energy", "ferberite", "frightening", "hurt", "ginger", "given", "hedenbergite"};
-    level3 = { "wols", "woker", "google","golo","xotur","fox","grunt","sold","sell", "eu", "www", "suter", "set", "hoff", "gun"};
-    level4 = { "walter", "wing", "devolvation","very","quest","zone","midle","power","left", "right", "again", "nice", "face", "quant", "place"};
-    level5 = { "expansion", "verification", "adaptation","innaguration","semestr","situation","stagnation","passion","reflection", "bagration", "stadium", "bariumity", "warzone", "worldwide", "pharmacy"};
+    this->setFixedSize(730,470);
 
-    if (level==1){
+
+
+
+
+
+    language = "eng";
+    engkeys = { "a", "b", "c","d","e","f","g","h","i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","  ","  ","  ","  ","  ","  "};
+    ruskeys = { "ф", "и", "с","в","у","а","п","р","ш", "о", "л", "д", "ь", "т", "щ", "з", "й", "к", "ы", "е", "г", "м", "ц", "ч", "н","я", "x","ъ","ж","э","б","ю"};
+    langkeys=engkeys;
+    level = 1;
+    leveleng={{ "burg", "bur", "bunny","burn","fug","bug","grunt","gun","gym", "hum", "jugum", "hurt", "mummy", "mugg", "thug"},
+              { "begem", "bein", "big","big","chicken","chief","deer","big","energy", "hurt", "hurt", "hurt", "big", "given", "given"},
+             { "wols", "woker", "google","golo","xotur","fox","grunt","sold","sell", "eu", "www", "suter", "set", "hoff", "gun"},
+             { "walter", "wing", "devolvation","very","quest","zone","midle","power","left", "right", "again", "nice", "face", "quant", "place"},
+             { "expansion", "verification", "adaptation","innaguration","semestr","situation","stagnation","passion","reflection", "bagration", "stadium", "bariumity", "warzone", "worldwide", "pharmacy"}};
+    levelrus={{ "ром", "рим", "мир","норка","река","кира","пин","ним","мен", "гон", "нога", "кино", "енот", "нить", "рак"},
+             { "упор", "правда", "сова","вонь","вино","вила","ноль","шов","ваш", "век", "бивень", "бад", "боль", "небо", "бан"},
+             { "набок", "бедро", "цирк","церковь","цент","тонна","тень","час","счет", "тальк", "темп", "предмет", "метр", "вектор", "век"},
+             { "рост", "река", "фольклор","хор","жизнь","жилка","жандарм","жена","я", "апатия", "ад", "овация", "вакцина", "эму", "йорк"},
+             { "россия", "любовь", "водка","вода","пиво","яблоко","ягода","як","ява", "алмаз", "вирус", "ватрушка", "весна", "школа", "забота"}};
+
+
+    levellang = leveleng;
+
+
+
+
+
+
         for(int i = 0; i<12; i++ ){
 
-            startstring+=level1[rnd(15)]+' ';
+            startstring+=levellang[0][rnd(levellang[0].size())]+' ';
         }
-    }
-    else if(level==2){
-        for(int i = 0; i<8; i++ ){
 
-            startstring+=level2[rnd(15)]+' ';
-        }
-    }
-    else if(level==3){
-        for(int i = 0; i<13; i++ ){
 
-            startstring+=level3[rnd(15)]+' ';
-        }
-    }
-    else if(level==4){
-        for(int i = 0; i<11; i++ ){
-
-            startstring+=level4[rnd(15)]+' ';
-        }
-    }
-    else if(level==5){
-        for(int i = 0; i<7; i++ ){
-
-            startstring+=level5[rnd(15)]+' ';
-        }
-    }
 
 
 
@@ -84,17 +156,21 @@ MainWindow::MainWindow(QWidget *parent) :
     count1 = 0;
 
 
-    style1 = "color: rgb(235, 240, 240); background-color: rgba(120, 123, 123, 150); text-align: center; border-radius: 6px; border-width:thick";
-    style2 = "color: rgb(235, 240, 240); background-color: rgba(134, 190, 255, 200); text-align: center; border-radius: 6px; border-width:thick";
-    style3 = "color: rgb(235, 240, 240); background-color: rgba(252, 85, 68,180); text-align: center; border-radius: 6px; border-width:thick";
+
+    style1 = "color: rgb(235, 240, 240); font: 19px San Francisco; background-color: rgba(120, 123, 123, 150); text-align: center; border-radius: 6px; border-width:thick";
+    style2 = "color: rgb(235, 240, 240); font: 19px San Francisco; background-color: rgba(134, 190, 255, 200); text-align: center; border-radius: 6px; border-width:thick";
+    style3 = "color: rgb(235, 240, 240); font: 19px San Francisco; background-color: rgba(252, 85, 68,180); text-align: center; border-radius: 6px; border-width:thick";
+    style4 = "color: rgb(235, 240, 240); font: 19px San Francisco; background-color: rgba(146, 148, 148, 200);; text-align: center; border-radius: 6px; border-width:thick";
+
 
     mistakes=0;
     accuracy=100;
 
     ui->label_34->setText(startstring);
-    ui->label_39->setText(QString::number(x1));
+    ui->label_39->setText("0");
+
     ui->label_41->setText("0");
-    //connect(ui->label_42,SIGNAL(clicked()),this,SLOT(testovoy()));
+
     count=0;
 }
 
@@ -116,179 +192,211 @@ MainWindow::~MainWindow()
 
 
 
-
 void MainWindow::keyPressEvent(QKeyEvent *event){
+    centralWidget()->setFocus();
+
+    ui->label_39->setText(QString::number(x1));
 
 
 
 
 
     if (event->key() == Qt::Key_Space){
-        k = ' ';
+        k = " ";
     }
-    if (event->key() == Qt::Key_Q){
-        k = 'q';
-
-    }
-    if (event->key() == Qt::Key_W){
-        k = 'w';
-
+    if (event->key() == Qt::Key_A){
+        k = langkeys[0];
 
     }
-    if (event->key() == Qt::Key_E){
-        k = 'e';
-
-
-    }
-    if (event->key() == Qt::Key_R){
-        k = 'r';
-
-
-    }
-    if (event->key() == Qt::Key_T){
-        k ='t';
-
-
-    }
-    if (event->key() == Qt::Key_Y){
-        k = 'y';
-
-
-    }
-    if (event->key() == Qt::Key_U){
-        k = 'u';
-
-
-    }
-    if (event->key() == Qt::Key_I){
-        k = 'i';
-
-
-    }
-    if (event->key() == Qt::Key_O){
-        k = 'o';
-
-
-    }
-    if (event->key() == Qt::Key_P){
-        k = 'p';
-
-
-    }
-    if (event->key() == Qt::Key_A){   
-        k = 'a';
-    }
-    if (event->key() == Qt::Key_S){
-        k = 's';
-
-
-    }
-    if (event->key() == Qt::Key_D){
-        k ='d';
-
-
-    }
-    if (event->key() == Qt::Key_F){
-        k ='f';
-
-
-    }
-    if (event->key() == Qt::Key_G){
-        k = 'g';
-
-
-    }
-    if (event->key() == Qt::Key_H){
-        k = 'h';
-
-
-    }
-    if (event->key() == Qt::Key_J){
-        k ='j';
-
-
-    }
-    if (event->key() == Qt::Key_K){
-        k = 'k';
-
-
-    }
-    if (event->key() == Qt::Key_L){
-        k ='l';
-
-
-    }
-    if (event->key() == Qt::Key_Z){
-        k = 'z';
-
-
-    }
-    if (event->key() == Qt::Key_X){
-        k = 'x';
+    if (event->key() == Qt::Key_B){
+        k = langkeys[1];
 
 
     }
     if (event->key() == Qt::Key_C){
-        k = 'c';
+        k = langkeys[2];
 
 
     }
-    if (event->key() == Qt::Key_V){
-        k = 'v';
+    if (event->key() == Qt::Key_D){
+        k = langkeys[3];
 
 
     }
-    if (event->key() == Qt::Key_B){
-        k = 'b';
+    if (event->key() == Qt::Key_E){
+        k =langkeys[4];
 
 
     }
-    if (event->key() == Qt::Key_N){
-        k = 'n';
+    if (event->key() == Qt::Key_F){
+        k = langkeys[5];
+
+
+    }
+    if (event->key() == Qt::Key_G){
+        k = langkeys[6];
+
+
+    }
+    if (event->key() == Qt::Key_H){
+        k = langkeys[7];
+
+
+    }
+    if (event->key() == Qt::Key_I){
+        k = langkeys[8];
+
+
+    }
+    if (event->key() == Qt::Key_J){
+        k = langkeys[9];
+
+
+    }
+    if (event->key() == Qt::Key_K){
+        k = langkeys[10];
+    }
+    if (event->key() == Qt::Key_L){
+        k = langkeys[11];
 
 
     }
     if (event->key() == Qt::Key_M){
+        k =langkeys[12];
 
-        k = 'm';
+
+    }
+    if (event->key() == Qt::Key_N){
+        k =langkeys[13];
+
+
+    }
+    if (event->key() == Qt::Key_O){
+        k = langkeys[14];
+
+
+    }
+    if (event->key() == Qt::Key_P){
+        k = langkeys[15];
+
+
+    }
+    if (event->key() == Qt::Key_Q){
+        k =langkeys[16];
+
+
+    }
+    if (event->key() == Qt::Key_R){
+        k = langkeys[17];
+
+
+    }
+    if (event->key() == Qt::Key_S){
+        k =langkeys[18];
+
+
+    }
+    if (event->key() == Qt::Key_T){
+        k = langkeys[19];
+
+
+    }
+    if (event->key() == Qt::Key_U){
+        k = langkeys[20];
+
+
+    }
+    if (event->key() == Qt::Key_V){
+        k = langkeys[21];
+
+
+    }
+    if (event->key() == Qt::Key_W){
+        k = langkeys[22];
+
+
+    }
+    if (event->key() == Qt::Key_X){
+        k = langkeys[23];
+
+
+    }
+    if (event->key() == Qt::Key_Y){
+        k = langkeys[24];
+
+
+    }
+    if (event->key() == Qt::Key_Z){
+
+        k = langkeys[25];
+    }
+    if (event->key() == Qt::Key_BracketLeft){
+
+        k = langkeys[26];
+    }
+    if (event->key() == Qt::Key_BracketRight){
+
+        k = langkeys[27];
+    }
+    if (event->key() == Qt::Key_Semicolon){
+
+        k = langkeys[28];
+    }
+    if (event->key() == Qt::Key_Apostrophe){
+
+        k = langkeys[29];
+    }
+    if (event->key() == Qt::Key_Comma){
+
+        k = langkeys[30];
+    }
+    if (event->key() == Qt::Key_Period){
+
+        k = langkeys[31];
     }
 
-    //if (mark == 1){
-    //    k=k1;
-    //    mark=0;
-    //}
+
+
     ui->enter->setStyleSheet(style1);
-    ui->q->setStyleSheet(style1);
+    ui->q->setStyleSheet(style4);
      ui->w->setStyleSheet(style1);
-      ui->e->setStyleSheet(style1);
+      ui->e->setStyleSheet(style4);
        ui->r->setStyleSheet(style1);
        ui->t->setStyleSheet(style1);
-       ui->y->setStyleSheet(style1);
-       ui->u->setStyleSheet(style1);
+       ui->y->setStyleSheet(style4);
+       ui->u->setStyleSheet(style4);
        ui->i->setStyleSheet(style1);
-       ui->o->setStyleSheet(style1);
+       ui->o->setStyleSheet(style4);
        ui->p->setStyleSheet(style1);
-       ui->a->setStyleSheet(style1);
+       ui->a->setStyleSheet(style4);
        ui->s->setStyleSheet(style1);
-       ui->d->setStyleSheet(style1);
+       ui->d->setStyleSheet(style4);
        ui->f->setStyleSheet(style1);
        ui->g->setStyleSheet(style1);
-       ui->h->setStyleSheet(style1);
-       ui->j->setStyleSheet(style1);
+       ui->h->setStyleSheet(style4);
+       ui->j->setStyleSheet(style4);
        ui->k->setStyleSheet(style1);
-       ui->l->setStyleSheet(style1);
-       ui->z->setStyleSheet(style1);
+       ui->l->setStyleSheet(style4);
+       ui->z->setStyleSheet(style4);
        ui->x->setStyleSheet(style1);
-       ui->c->setStyleSheet(style1);
+       ui->c->setStyleSheet(style4);
        ui->v->setStyleSheet(style1);
        ui->b->setStyleSheet(style1);
-       ui->n->setStyleSheet(style1);
-       ui->m->setStyleSheet(style1);
+       ui->n->setStyleSheet(style4);
+       ui->m->setStyleSheet(style4);
        ui->space->setStyleSheet(style1);
 
+       ui->ha->setStyleSheet(style1);
+       ui->tvznak->setStyleSheet(style1);
+       ui->je->setStyleSheet(style1);
+       ui->aa->setStyleSheet(style1);
+       ui->ba->setStyleSheet(style1);
+       ui->uu->setStyleSheet(style4);
 
 
 
+    cutter = startstring.mid(count+1,1);
+    cutter2 = startstring.mid(count,1);
 
 
 
@@ -300,251 +408,294 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
         ui->enter->setStyleSheet(style1);
     }
 
-    if (startstring[count+1]==' '){
+    if (cutter==" "){
         ui->space->setStyleSheet(style2);
     }
-    else if ( k==' ' && startstring[count]!=' ')
+    else if ( k==" " && cutter2!=" ")
      {
          ui->space->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='q'){
-        ui->q->setStyleSheet(style2);
-    }
-    else if ( k=='q' && startstring[count]!='q')
-     {
-         ui->j->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='w'){
-        ui->w->setStyleSheet(style2);
-    }
-    else if ( k=='w' && startstring[count]!='w')
-     {
-         ui->j->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='e'){
-        ui->e->setStyleSheet(style2);
-    }
-    else if ( k=='e' && startstring[count]!='e')
-     {
-         ui->j->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='a'){
+    if (cutter==langkeys[0]){
         ui->a->setStyleSheet(style2);
     }
-    else if ( k=='a' && startstring[count]!='a')
+    else if ( k==langkeys[0] && cutter2!=langkeys[0])
      {
          ui->a->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='z'){
-        ui->z->setStyleSheet(style2);
+    if (cutter==langkeys[1]){
+        ui->b->setStyleSheet(style2);
     }
-    else if ( k=='z' && startstring[count]!='z')
+    else if ( k==langkeys[1] && cutter2!=langkeys[1])
      {
-         ui->z->setStyleSheet(style3);
+         ui->b->setStyleSheet(style3);
 
      }
-
-    if (startstring[count+1]=='s'){
-        ui->s->setStyleSheet(style2);
-    }
-    else if ( k=='s' && startstring[count]!='s')
-     {
-         ui->s->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='x'){
-        ui->x->setStyleSheet(style2);
-    }
-    else if ( k=='x' && startstring[count]!='x')
-     {
-         ui->x->setStyleSheet(style3);
-
-     }
-
-    if (startstring[count+1]=='d'){
-        ui->d->setStyleSheet(style2);
-    }
-    else if ( k=='d' && startstring[count]!='d')
-     {
-         ui->d->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='c'){
+    if (cutter==langkeys[2]){
         ui->c->setStyleSheet(style2);
     }
-    else if ( k=='c' && startstring[count]!='c')
+    else if ( k==langkeys[2] && cutter2!=langkeys[2])
      {
          ui->c->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='v'){
-        ui->v->setStyleSheet(style2);
+    if (cutter==langkeys[3]){
+        ui->d->setStyleSheet(style2);
     }
-    else if ( k=='v' && startstring[count]!='v')
+    else if ( k==langkeys[3] && cutter2!=langkeys[3])
      {
-         ui->v->setStyleSheet(style3);
+         ui->d->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='t'){
-        ui->t->setStyleSheet(style2);
+    if (cutter==langkeys[4]){
+        ui->e->setStyleSheet(style2);
     }
-    else if ( k=='t' && startstring[count]!='t')
+    else if ( k==langkeys[4] && cutter2!=langkeys[4])
      {
-         ui->t->setStyleSheet(style3);
+         ui->e->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='i'){
+
+    if (cutter==langkeys[5]){
+        ui->f->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[5] && cutter2!=langkeys[5])
+     {
+         ui->f->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[6]){
+        ui->g->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[6] && cutter2!=langkeys[6])
+     {
+         ui->g->setStyleSheet(style3);
+
+     }
+
+    if (cutter==langkeys[7]){
+        ui->h->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[7] && cutter2!=langkeys[7])
+     {
+         ui->h->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[8]){
         ui->i->setStyleSheet(style2);
     }
-    else if ( k=='i' && startstring[count]!='i')
+    else if ( k==langkeys[8] && cutter2!=langkeys[8])
      {
          ui->i->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='j'){
+    if (cutter==langkeys[9]){
         ui->j->setStyleSheet(style2);
     }
-    else if ( k=='j' && startstring[count]!='j')
+    else if ( k==langkeys[9] && cutter2!=langkeys[9])
      {
          ui->j->setStyleSheet(style3);
 
      }
-
-
-
-
-    if (startstring[count+1]=='k'){
+    if (cutter==langkeys[10]){
         ui->k->setStyleSheet(style2);
     }
-    else if ( k=='k' && startstring[count]!='k')
+    else if ( k==langkeys[10] && cutter2!=langkeys[10])
      {
          ui->k->setStyleSheet(style3);
 
      }
+    if (cutter==langkeys[11]){
+        ui->l->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[11] && cutter2!=langkeys[11])
+     {
+         ui->l->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[12]){
+        ui->m->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[12] && cutter2!=langkeys[12])
+     {
+         ui->m->setStyleSheet(style3);
+
+     }
 
 
-    if (startstring[count+1]=='o'){
+
+
+    if (cutter==langkeys[13]){
+        ui->n->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[13] && cutter2!=langkeys[13])
+     {
+         ui->n->setStyleSheet(style3);
+
+     }
+
+
+    if (cutter==langkeys[14]){
         ui->o->setStyleSheet(style2);
     }
-    else if ( k=='o' && startstring[count]!='o')
+    else if ( k==langkeys[14] && cutter2!=langkeys[14])
      {
          ui->o->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='p'){
+    if (cutter==langkeys[15]){
         ui->p->setStyleSheet(style2);
     }
-    else if ( k=='p' && startstring[count]!='p')
+    else if ( k==langkeys[15] && cutter2!=langkeys[15])
      {
          ui->p->setStyleSheet(style3);
 
      }
 
 
-    if (startstring[count+1]=='g'){
-        ui->g->setStyleSheet(style2);
+    if (cutter==langkeys[16]){
+        ui->q->setStyleSheet(style2);
     }
-    else if ( k=='g' && startstring[count]!='g')
+    else if ( k==langkeys[16] && cutter2!=langkeys[16])
      {
-         ui->g->setStyleSheet(style3);
+         ui->q->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='h'){
-        ui->h->setStyleSheet(style2);
-    }
-    else if ( k=='h' && startstring[count]!='h')
-     {
-         ui->h->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='t'){
-        ui->t->setStyleSheet(style2);
-    }
-    else if ( k=='t' && startstring[count]!='t')
-     {
-         ui->t->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='y'){
-        ui->y->setStyleSheet(style2);
-    }
-    else if ( k=='y' && startstring[count]!='y')
-     {
-         ui->y->setStyleSheet(style3);
-
-     }
-    if (startstring[count+1]=='r'){
+    if (cutter==langkeys[17]){
         ui->r->setStyleSheet(style2);
     }
-    else if ( k=='r' && startstring[count]!='r')
+    else if ( k==langkeys[17] && cutter2!=langkeys[17])
      {
          ui->r->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='u'){
+    if (cutter==langkeys[18]){
+        ui->s->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[18] && cutter2!=langkeys[18])
+     {
+         ui->s->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[19]){
+        ui->t->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[19] && cutter2!=langkeys[19])
+     {
+         ui->t->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[20]){
         ui->u->setStyleSheet(style2);
     }
-    else if ( k=='u' && startstring[count]!='u')
+    else if ( k==langkeys[20] && cutter2!=langkeys[20])
      {
          ui->u->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='b'){
-        ui->b->setStyleSheet(style2);
+    if (cutter==langkeys[21]){
+        ui->v->setStyleSheet(style2);
+    }
+    else if ( k==langkeys[21] && cutter2!=langkeys[21])
+     {
+         ui->v->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[22]){
+        ui->w->setStyleSheet(style2);
 
     }
-    else if ( k=='b' && startstring[count]!='b')
+    else if ( k==langkeys[22] && cutter2!=langkeys[22])
      {
-         ui->b->setStyleSheet(style3);
+         ui->w->setStyleSheet(style3);
 
      }
 
 
-    if (startstring[count+1]=='n'){
-        ui->n->setStyleSheet(style2);
+    if (cutter==langkeys[23]){
+        ui->x->setStyleSheet(style2);
     }
-    else if ( k=='n' && startstring[count]!='n')
+    else if ( k==langkeys[23] && cutter2!=langkeys[23])
      {
-         ui->n->setStyleSheet(style3);
+         ui->x->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='m'){
-        ui->m->setStyleSheet(style2);
+    if (cutter==langkeys[24]){
+        ui->y->setStyleSheet(style2);
     }
-    else if ( k=='m' && startstring[count]!='m')
+    else if ( k==langkeys[24] && cutter2!=langkeys[24])
      {
-         ui->m->setStyleSheet(style3);
+         ui->y->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]==' '){
-        ui->space->setStyleSheet(style2);
+
+    if (cutter==langkeys[25]){
+        ui->z->setStyleSheet(style2);
     }
-    else if ( k==' ' && startstring[count]!=' ')
+    else if ( k==langkeys[25] && cutter2!=langkeys[25])
      {
-         ui->space->setStyleSheet(style3);
+         ui->z->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='f'){
-        ui->f->setStyleSheet(style2);
+    if (cutter==langkeys[26]){
+        ui->ha->setStyleSheet(style2);
     }
-    else if ( k=='f' && startstring[count]!='f')
+
+    else if ( k==langkeys[26] && cutter2!=langkeys[26])
      {
-         ui->f->setStyleSheet(style3);
+         ui->ha->setStyleSheet(style3);
 
      }
-    if (startstring[count+1]=='l'){
-        ui->l->setStyleSheet(style2);
+    if (cutter==langkeys[27]){
+        ui->tvznak->setStyleSheet(style2);
     }
-    else if ( k=='l' && startstring[count]!='l')
+
+    else if ( k==langkeys[27] && cutter2!=langkeys[27])
      {
-         ui->l->setStyleSheet(style3);
+         ui->tvznak->setStyleSheet(style3);
 
      }
+    if (cutter==langkeys[28]){
+        ui->je->setStyleSheet(style2);
+    }
+
+    else if ( k==langkeys[28] && cutter2!=langkeys[28])
+     {
+         ui->je->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[29]){
+        ui->aa->setStyleSheet(style2);
+    }
+
+    else if ( k==langkeys[29] && cutter2!=langkeys[29])
+     {
+         ui->aa->setStyleSheet(style3);
+
+     }
+    if (cutter==langkeys[30]){
+        ui->ba->setStyleSheet(style2);
+    }
+
+    else if ( k==langkeys[30] && cutter2!=langkeys[30])
+     {
+         ui->ba->setStyleSheet(style3);
+     }
+    if (cutter==langkeys[31]){
+        ui->uu->setStyleSheet(style2);
+    }
+
+    else if ( k==langkeys[31] && cutter2!=langkeys[31])
+     {
+         ui->uu->setStyleSheet(style3);
+     }
+
+
+
+
+
+
 
 
 
@@ -552,7 +703,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     keyv1=keyv;
     keyv += startstring[count];
     keyv2 += k;
-    if ( startstring[count]!=keyv2[count])
+    cutter3 = keyv2.mid(count,1);
+    if ( cutter2!=cutter3)
     {
     mistakes+=1;
     }
@@ -578,67 +730,49 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     count = 0;
     count1 = 0;
     startstring = "";
-    if (level==1){
-        for(int i = 0; i<12; i++ ){
+    startstring = stroka(level, startstring, levellang);
 
-            startstring+=level1[rnd(15)]+' ';
-        }
-    }
-    else if(level==2){
-        for(int i = 0; i<8; i++ ){
-
-            startstring+=level2[rnd(15)]+' ';
-        }
-    }
-    else if(level==3){
-        for(int i = 0; i<13; i++ ){
-
-            startstring+=level3[rnd(15)]+' ';
-        }
-    }
-    else if(level==4){
-        for(int i = 0; i<11; i++ ){
-
-            startstring+=level4[rnd(15)]+' ';
-        }
-    }
-    else if(level==5){
-        for(int i = 0; i<7; i++ ){
-
-            startstring+=level5[rnd(15)]+' ';
-        }
-    }
     ui->enter->setStyleSheet(style1);
-    ui->q->setStyleSheet(style1);
+    ui->q->setStyleSheet(style4);
      ui->w->setStyleSheet(style1);
-      ui->e->setStyleSheet(style1);
+      ui->e->setStyleSheet(style4);
        ui->r->setStyleSheet(style1);
        ui->t->setStyleSheet(style1);
-       ui->y->setStyleSheet(style1);
-       ui->u->setStyleSheet(style1);
+       ui->y->setStyleSheet(style4);
+       ui->u->setStyleSheet(style4);
        ui->i->setStyleSheet(style1);
-       ui->o->setStyleSheet(style1);
+       ui->o->setStyleSheet(style4);
        ui->p->setStyleSheet(style1);
-       ui->a->setStyleSheet(style1);
+       ui->a->setStyleSheet(style4);
        ui->s->setStyleSheet(style1);
-       ui->d->setStyleSheet(style1);
+       ui->d->setStyleSheet(style4);
        ui->f->setStyleSheet(style1);
        ui->g->setStyleSheet(style1);
-       ui->h->setStyleSheet(style1);
-       ui->j->setStyleSheet(style1);
+       ui->h->setStyleSheet(style4);
+       ui->j->setStyleSheet(style4);
        ui->k->setStyleSheet(style1);
-       ui->l->setStyleSheet(style1);
-       ui->z->setStyleSheet(style1);
+       ui->l->setStyleSheet(style4);
+       ui->z->setStyleSheet(style4);
        ui->x->setStyleSheet(style1);
-       ui->c->setStyleSheet(style1);
+       ui->c->setStyleSheet(style4);
        ui->v->setStyleSheet(style1);
        ui->b->setStyleSheet(style1);
-       ui->n->setStyleSheet(style1);
-       ui->m->setStyleSheet(style1);
+       ui->n->setStyleSheet(style4);
+       ui->m->setStyleSheet(style4);
+       ui->space->setStyleSheet(style1);
+
+       ui->ha->setStyleSheet(style1);
+       ui->tvznak->setStyleSheet(style1);
+       ui->je->setStyleSheet(style1);
+       ui->aa->setStyleSheet(style1);
+       ui->ba->setStyleSheet(style1);
+       ui->uu->setStyleSheet(style4);
+
     ui->space->setStyleSheet(style1);
     ui->label_34->setText(startstring);
     accuracy=100;
     mistakes=0;
+    keyv2 = "";
     ui->label_41->setText( QString::number(mistakes));
     ui->label_40->setText( QString::number(accuracy)+'%');
 
@@ -660,38 +794,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 
 
-void MainWindow::on_label_42_linkActivated(const QString &link)
-{
 
 
-}
-
-void MainWindow::on_label_42_linkHovered(const QString &link)
-{
 
 
-}
-
-void MainWindow::testovoy(){
 
 
-}
 
-void MainWindow::on_label_42_windowIconTextChanged(const QString &iconText)
-{
 
-}
 
-void MainWindow::on_label_42_objectNameChanged(const QString &objectName)
-{
-
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    level=1;
-
-}
 
 void MainWindow::on_l1_clicked()
 {
@@ -715,7 +826,165 @@ void MainWindow::on_l4_clicked()
     level=4;
 }
 
-void MainWindow::on_l1_5_clicked()
+
+
+void MainWindow::on_l5_clicked()
 {
-    level=5;
+
+    file_name = QFileDialog::getOpenFileName(this,"Open a file","");
+    QFile file(file_name);
+
+    if (!file.open(QFile::ReadOnly | QFile::Text)){
+        QMessageBox::warning(this,"","Файл не существует или не был выбран");
+    }
+    else
+    {
+        QTextStream in(&file);
+        QString text = in.readAll();
+        QStringList query = text.split(" ");
+
+            level=5;
+
+        levellang[4] = query;
+    }
+
+
+
+
+}
+
+
+
+void MainWindow::on_eng_clicked()
+{
+    language = "eng";
+    langkeys = engkeys;
+    levellang=leveleng;
+    ui->a->setText(langkeys[0]);
+     ui->b->setText(langkeys[1]);
+      ui->c->setText(langkeys[2]);
+       ui->d->setText(langkeys[3]);
+       ui->e->setText(langkeys[4]);
+       ui->f->setText(langkeys[5]);
+       ui->g->setText(langkeys[6]);
+       ui->h->setText(langkeys[7]);
+       ui->i->setText(langkeys[8]);
+       ui->j->setText(langkeys[9]);
+       ui->k->setText(langkeys[10]);
+       ui->l->setText(langkeys[11]);
+       ui->m->setText(langkeys[12]);
+       ui->n->setText(langkeys[13]);
+       ui->o->setText(langkeys[14]);
+       ui->p->setText(langkeys[15]);
+       ui->q->setText(langkeys[16]);
+       ui->r->setText(langkeys[17]);
+       ui->s->setText(langkeys[18]);
+       ui->t->setText(langkeys[19]);
+       ui->u->setText(langkeys[20]);
+       ui->v->setText(langkeys[21]);
+       ui->w->setText(langkeys[22]);
+       ui->x->setText(langkeys[23]);
+       ui->y->setText(langkeys[24]);
+       ui->z->setText(langkeys[25]);
+
+       ui->ha->setText(langkeys[26]);
+       ui->tvznak->setText(langkeys[27]);
+       ui->je->setText(langkeys[28]);
+       ui->aa->setText(langkeys[29]);
+       ui->ba->setText(langkeys[30]);
+       ui->uu->setText(langkeys[31]);
+
+       keyv = "";
+       ui->label_42->setText(keyv);
+       mistakes = 0;
+       count = 0;
+       count1 = 0;
+       startstring = "";
+       startstring = stroka(level, startstring, levellang);
+       ui->space->setStyleSheet(style1);
+       ui->label_34->setText(startstring);
+       accuracy=100;
+       mistakes=0;
+       keyv2 = "";
+       ui->label_41->setText( QString::number(mistakes));
+       ui->label_40->setText( QString::number(accuracy)+'%');
+
+       ui->label_39->setText(QString::number(0));
+       ttt.start();
+}
+
+void MainWindow::on_rus_clicked()
+{
+    language = "rus";
+    langkeys = ruskeys;
+    levellang=levelrus;
+    ui->a->setText(langkeys[0]);
+     ui->b->setText(langkeys[1]);
+      ui->c->setText(langkeys[2]);
+       ui->d->setText(langkeys[3]);
+       ui->e->setText(langkeys[4]);
+       ui->f->setText(langkeys[5]);
+       ui->g->setText(langkeys[6]);
+       ui->h->setText(langkeys[7]);
+       ui->i->setText(langkeys[8]);
+       ui->j->setText(langkeys[9]);
+       ui->k->setText(langkeys[10]);
+       ui->l->setText(langkeys[11]);
+       ui->m->setText(langkeys[12]);
+       ui->n->setText(langkeys[13]);
+       ui->o->setText(langkeys[14]);
+       ui->p->setText(langkeys[15]);
+       ui->q->setText(langkeys[16]);
+       ui->r->setText(langkeys[17]);
+       ui->s->setText(langkeys[18]);
+       ui->t->setText(langkeys[19]);
+       ui->u->setText(langkeys[20]);
+       ui->v->setText(langkeys[21]);
+       ui->w->setText(langkeys[22]);
+       ui->x->setText(langkeys[23]);
+       ui->y->setText(langkeys[24]);
+       ui->z->setText(langkeys[25]);
+
+       ui->ha->setText(langkeys[26]);
+       ui->tvznak->setText(langkeys[27]);
+       ui->je->setText(langkeys[28]);
+       ui->aa->setText(langkeys[29]);
+       ui->ba->setText(langkeys[30]);
+       ui->uu->setText(langkeys[31]);
+
+       keyv = "";
+       ui->label_42->setText(keyv);
+       mistakes = 0;
+       count = 0;
+       count1 = 0;
+       startstring = "";
+       startstring = stroka(level, startstring, levellang);
+       ui->space->setStyleSheet(style1);
+       ui->label_34->setText(startstring);
+       accuracy=100;
+       mistakes=0;
+       keyv2 = "";
+       ui->label_41->setText( QString::number(mistakes));
+       ui->label_40->setText( QString::number(accuracy)+'%');
+
+       ui->label_39->setText(QString::number(0));
+       ttt.start();
+}
+
+
+
+void MainWindow::on_editor_clicked()
+{
+    SecondWindow window;
+    window.setWindowTitle("Редактор словарей");
+    window.setModal(true);
+    window.exec();
+}
+
+void MainWindow::on_info_clicked()
+{
+    infow window;
+    window.setWindowTitle("Информация");
+    window.setModal(true);
+    window.exec();
 }

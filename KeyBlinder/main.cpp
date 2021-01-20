@@ -9,14 +9,25 @@
 #include <QTimer>
 #include <QWidget>
 #include <QKeyEvent>
-#include <Qstring>
-
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QDebug>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    w.setWindowTitle("KeyBlinder");
+
+    //w.setIcon(QIcon("icon.png"));
     w.show();
+
+
+
 
     return a.exec();
 
