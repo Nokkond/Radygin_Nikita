@@ -18,6 +18,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
 
+qt5_add_resources(QRCS KeyBlinder/pictures.qrc)
+
 
 set(Nick
     KeyBlinder/mainwindow.cpp
