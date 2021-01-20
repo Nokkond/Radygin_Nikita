@@ -14,10 +14,8 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="myres.qrc">
-    <normaloff>:/images/icon.png</normaloff>
-    <disabledoff>:/images/icon.png</disabledoff>
-    <selectedoff>:/images/icon.png</selectedoff>:/images/icon.png</iconset>
+   <iconset resource="pictures.qrc">
+    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color:rgb(72, 73, 73)</string>
@@ -3402,7 +3400,7 @@ border-width: thick;
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="myres.qrc"/>
+  <include location="pictures.qrc"/>
  </resources>
  <connections/>
 </ui>
